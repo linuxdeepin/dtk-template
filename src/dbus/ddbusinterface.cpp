@@ -39,6 +39,9 @@ DDBusInterfacePrivate::DDBusInterfacePrivate(DDBusInterface *interface, QObject 
 
 void DDBusInterfacePrivate::updateProp(const char *propname, const QVariant &value)
 {
+    if (!m_parent)
+        return;
+
     m_propertyMap.insert(propname, value);
     const QMetaObject *metaObj = m_parent->metaObject();
     const char *signalName = propname + QStringLiteral("Changed").toLatin1();
@@ -51,6 +54,8 @@ void DDBusInterfacePrivate::updateProp(const char *propname, const QVariant &val
 
 void DDBusInterfacePrivate::initDBusConnection()
 {
+    if (!m_parent)
+        return;
     Q_Q(DDBusInterface);
     QDBusConnection connection = q->connection();
     QStringList signalList;
