@@ -9,7 +9,7 @@
 #include "ddemointerface.h"
 #include "dfakeinterface.h"
 
-class ut_DDemoInterface : public testing::Test {
+class TestDDemoInterface : public testing::Test {
 public:
     // 在测试套件的第一个测试用例开始前，SetUpTestCase 函数会被调用
     static void SetUpTestCase() {
@@ -33,10 +33,10 @@ public:
     static DDemoInterface *m_demoInterface;
 };
 
-DFakeInterface *ut_DDemoInterface::m_fakeInterface = nullptr;
-DDemoInterface *ut_DDemoInterface::m_demoInterface = nullptr;
+DFakeInterface *TestDDemoInterface::m_fakeInterface = nullptr;
+DDemoInterface *TestDDemoInterface::m_demoInterface = nullptr;
 
-TEST_F(ut_DDemoInterface, DockedProperty)
+TEST_F(TestDDemoInterface, DockedProperty)
 {
     EXPECT_EQ(false, m_demoInterface->Docked());
 
@@ -45,7 +45,7 @@ TEST_F(ut_DDemoInterface, DockedProperty)
     EXPECT_EQ(true, m_demoInterface->Docked());
 }
 
-TEST_F(ut_DDemoInterface, ListUsers)
+TEST_F(TestDDemoInterface, ListUsers)
 {
     UserPathList list;
     EXPECT_EQ(list, m_demoInterface->ListUsers());

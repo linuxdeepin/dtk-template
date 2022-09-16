@@ -9,7 +9,7 @@
 
 DDEMO_USE_NAMESPACE
 
-class ut_Demo : public testing::Test
+class TestDemo : public testing::Test
 {
 public:
     void SetUp() override
@@ -25,12 +25,12 @@ public:
     Demo *m_demo = nullptr;
 };
 
-TEST_F(ut_Demo, add)
+TEST_F(TestDemo, add)
 {
     EXPECT_EQ(3, m_demo->add(1, 2));
 }
 
-TEST_F(ut_Demo, svg2png)
+TEST_F(TestDemo, svg2png)
 {
     Stub stub;
     stub.set(rsvg_handle_new_from_file, rsvg_handle_new_from_file_stub);
