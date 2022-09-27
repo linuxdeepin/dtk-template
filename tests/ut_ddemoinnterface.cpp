@@ -7,14 +7,14 @@
 #include <QDBusObjectPath>
 
 #include "ddemointerface.h"
-#include "dfakeinterface.h"
+#include "dbus/dfakeinterface.h"
 
 class TestDDemoInterface : public testing::Test {
 public:
     // 在测试套件的第一个测试用例开始前，SetUpTestCase 函数会被调用
     static void SetUpTestCase() {
-        m_demoInterface = new DDemoInterface ();
         m_fakeInterface = new DFakeInterface();
+        m_demoInterface = new DDemoInterface();
     }
     // 在测试套件中的最后一个测试用例运行结束后，TearDownTestCase 函数会被调用
     static void TearDownTestCase() {

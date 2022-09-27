@@ -4,11 +4,7 @@
 
 set(BIN_NAME ut-dtkdemo)
 
-#add_definitions(-DUSE_MOCK_INTERFACE)
-
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-access-control -fno-inline -Wno-pmf-conversions")
-
-include(./dbus/fakeInterface.cmake)
 
 file(GLOB_RECURSE INCLUDE_FILES "../include/*.h")
 file(GLOB_RECURSE SRCS
@@ -21,7 +17,7 @@ include_directories(
     "../include"
     "../src/dbus"
 )
-
+add_definitions(-DUSE_FAKE_INTERFACE)
 add_executable(${BIN_NAME}
     ${INCLUDE_FILES}
     ${SRCS}

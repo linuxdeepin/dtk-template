@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 #include "dfakeinterface.h"
-#include "dfakeinterface_adaptor.h"
 
 #include <QDBusMessage>
 #include <QDBusConnection>
@@ -22,26 +21,30 @@ DFakeInterface::~DFakeInterface()
 
 bool DFakeInterface::registerService()
 {
-    // 编写 DFakeInterface 头文件，qdbuscpp2xml -A dfakeinterface.h -o xxx.xml
-    // 添加自定义类型的函数，ListUsers / setListUsers
-    // DFakeInterfaceAdaptor 由 qt5_add_dbus_adaptor 中调用 qdbusxml2cpp 自动生成
-    Q_UNUSED(new DFakeInterfaceAdaptor(this));
-
+    const QString &service = QLatin1String("org.freedesktop.fakelogin");
+    const QString &path = QLatin1String("/org/freedesktop/fakelogin");
     QDBusConnection bus = QDBusConnection::sessionBus();
-    if (!bus.registerService(FAKE_SERVICE)) {
+    if (!bus.registerService(service)) {
         QString errorMsg = bus.lastError().message();
         if (errorMsg.isEmpty())
             errorMsg = "maybe it's running";
 
-        qWarning() << QString("Can't register the %1 service, %2.").arg(FAKE_SERVICE).arg(errorMsg);
+        qWarning() << QString("Can't register the %1 service, %2.").arg(service).arg(errorMsg);
         return false;
     }
-    if (!bus.registerObject(FAKE_PATH, this)) {
-        qWarning() << QString("Can't register %1 the D-Bus object.").arg(FAKE_PATH);
+    if (!bus.registerObject(path, this, QDBusConnection::ExportAllContents)) {
+        qWarning() << QString("Can't register %1 the D-Bus object.").arg(path);
         return false;
     }
 
     return true;
+}
+
+void DFakeInterface::unRegisterService()
+{
+    QDBusConnection bus = QDBusConnection::sessionBus();
+    bus.unregisterObject(QLatin1String("/org/freedesktop/fakelogin"));
+    bus.unregisterService(QLatin1String("org.freedesktop.fakelogin"));
 }
 
 bool DFakeInterface::Docked() const

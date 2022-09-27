@@ -7,12 +7,11 @@
 #include "ddemotypes.h"
 
 #include <QDBusPendingReply>
-#include <qobjectdefs.h>
 
 #ifdef USE_FAKE_INTERFACE
-static const QString &Service = QStringLiteral(FAKE_SERVICE);
-static const QString &Path = QStringLiteral(FAKE_PATH);
-static const QString &Interface = QStringLiteral(FAKE_INTERFACE);
+static const QString &Service = QStringLiteral("org.freedesktop.fakelogin");
+static const QString &Path = QStringLiteral("/org/freedesktop/fakelogin");
+static const QString &Interface = QStringLiteral("org.freedesktop.fakelogin.Manager");
 #define DBUS_CON QDBusConnection::sessionBus()
 #else
 static const QString &Service = QStringLiteral("org.freedesktop.login1");
