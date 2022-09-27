@@ -16,6 +16,5 @@ int main(int argc, char **argv)
 #ifdef QT_DEBUG
     __sanitizer_set_report_path("asan_demo.log");
 #endif
-
     return ret; //app.exec();
 }
