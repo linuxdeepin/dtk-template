@@ -13,15 +13,17 @@ class DDBusInterfacePrivate : public QObject
 
 public:
     explicit DDBusInterfacePrivate(DDBusInterface *interface, QObject *parent);
-    void updateProp(const char *propname, const QVariant &value);
+    void updateProp(const char *propName, const QVariant &value);
     void initDBusConnection();
     void setServiceValid(bool valid);
 
 private Q_SLOTS:
-    void onPropertiesChanged(const QString &interfaceName, const QVariantMap &changedProperties, const QStringList &invalidatedProperties);
+    void onPropertiesChanged(const QString &interfaceName,
+                             const QVariantMap &changedProperties,
+                             const QStringList &invalidatedProperties);
     void onAsyncPropertyFinished(QDBusPendingCallWatcher *w);
     void onDBusNameHasOwner(bool valid);
-    void onDBusNameOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOWner);
+    void onDBusNameOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner);
 
 public:
     QObject *m_parent;
@@ -32,4 +34,3 @@ public:
     DDBusInterface *q_ptr;
     Q_DECLARE_PUBLIC(DDBusInterface)
 };
-
