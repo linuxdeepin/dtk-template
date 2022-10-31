@@ -4,14 +4,15 @@
 
 #pragma once
 
-#include "namespace.h"
+#include "dtkdemo_global.h"
 #include <QSize>
 #include <qobject.h>
 
 DDEMO_BEGIN_NAMESPACE
-class Demo : public QObject {
+class Demo : public QObject
+{
     Q_OBJECT
-  public:
+public:
     Demo(QObject *parent = nullptr);
     ~Demo();
     int add(const int a, const int b);
