@@ -26,7 +26,7 @@ set (DOXYGEN_PREDEFINED
     "\"DDEMO_USE_NAMESPACE=using namespace Dtk::Demo;\""
 )
 
-doxygen_add_docs (doxygen
+doxygen_add_docs (doxygen_demo
     ${CMAKE_CURRENT_SOURCE_DIR}/../include
     ${CMAKE_CURRENT_SOURCE_DIR}/../docs
     ALL
