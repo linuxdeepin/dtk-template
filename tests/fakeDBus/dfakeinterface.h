@@ -1,16 +1,17 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 #ifndef DFAKEINTERFACE_H
 #define DFAKEINTERFACE_H
 
+#include "ddemotypes_p.h"
 #include <QObject>
-#include "ddemotypes.h"
+#include <QDBusObjectPath>
 
 class DFakeInterface : public QObject
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface","org.freedesktop.fakelogin.Manager")
+    Q_CLASSINFO("D-Bus Interface", "org.freedesktop.fakelogin.Manager")
 public:
     explicit DFakeInterface(QObject *parent = nullptr);
     virtual ~DFakeInterface();
@@ -20,8 +21,8 @@ public:
     void setDocked(bool docked = true);
 
 public slots:
-    UserPathList ListUsers();
-    void setListUsers(const UserPathList &list); // addUser ?
+    Dtk::Demo::UserPathList_p ListUsers();
+    void setListUsers(const Dtk::Demo::UserPathList_p &list);  // addUser ?
 
 signals:
     void DockedChanged(const bool value);
@@ -31,8 +32,8 @@ private:
     bool registerService();
     void unRegisterService();
 
-    UserPathList m_users;
-    bool m_docked = false;
+    Dtk::Demo::UserPathList_p m_users{};
+    bool m_docked{false};
 };
 
-#endif // DFAKEINTERFACE_H
+#endif  // DFAKEINTERFACE_H

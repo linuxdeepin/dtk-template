@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
@@ -9,18 +9,17 @@
 #include <QDBusConnectionInterface>
 #include <QDebug>
 
-DFakeInterface::DFakeInterface(QObject *parent) : QObject(parent)
+DFakeInterface::DFakeInterface(QObject *parent)
+    : QObject(parent)
 {
     registerService();
 }
 
-DFakeInterface::~DFakeInterface()
-{
-
-}
+DFakeInterface::~DFakeInterface() {}
 
 bool DFakeInterface::registerService()
 {
+    Dtk::Demo::UserPath_p::registerMetaType();
     const QString &service = QLatin1String("org.freedesktop.fakelogin");
     const QString &path = QLatin1String("/org/freedesktop/fakelogin");
     QDBusConnection bus = QDBusConnection::sessionBus();
@@ -61,12 +60,12 @@ void DFakeInterface::setDocked(bool docked)
     Q_EMIT DockedChanged(docked);
 }
 
-UserPathList DFakeInterface::ListUsers()
+Dtk::Demo::UserPathList_p DFakeInterface::ListUsers()
 {
     return m_users;
 }
 
-void DFakeInterface::setListUsers(const UserPathList &list)
+void DFakeInterface::setListUsers(const Dtk::Demo::UserPathList_p &list)
 {
     if (list == m_users)
         return;
@@ -78,4 +77,3 @@ void DFakeInterface::setListUsers(const UserPathList &list)
 
     m_users = list;
 }
-
