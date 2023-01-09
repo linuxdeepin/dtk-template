@@ -1,7 +1,10 @@
-# SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+# SPDX-FileCopyrightText: 2022 - 2023 UnionTech Software Technology Co., Ltd.
 #
 # SPDX-License-Identifier: LGPL-3.0-or-later
-#${CMAKE_INSTALL_DATAROOTDIR}/qt5/doc
+
+cmake_minimum_required (VERSION 3.10)
+
+find_package (Doxygen REQUIRED)
 
 set (QCH_INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/qt5/doc CACHE STRING "QCH install location")
 set (DOXYGEN_GENERATE_HTML "YES" CACHE STRING "Doxygen HTML output")
@@ -13,7 +16,7 @@ set (DOXYGEN_EXTRACT_STATIC YES)
 set (DOXYGEN_OUTPUT_LANGUAGE "Chinese")
 set (DOXYGEN_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/docs/)
 set (DOXYGEN_QHG_LOCATION "qhelpgenerator")
-set (DOXYGEN_QHP_NAMESPACE "org.deepin.dde.${CMAKE_PROJECT_NAME}")
+set (DOXYGEN_QHP_NAMESPACE "org.deepin.dtk.${CMAKE_PROJECT_NAME}")
 set (DOXYGEN_QCH_FILE "${CMAKE_PROJECT_NAME}.qch")
 set (DOXYGEN_QHP_VIRTUAL_FOLDER ${CMAKE_PROJECT_NAME})
 set (DOXYGEN_HTML_EXTRA_STYLESHEET "" CACHE STRING "Doxygen custom stylesheet for HTML output")
@@ -21,14 +24,14 @@ set (DOXYGEN_TAGFILES "qtcore.tags=qthelp://doc.qt.io/qt-5/" CACHE STRING "Doxyg
 set (DOXYGEN_MACRO_EXPANSION "YES")
 set (DOXYGEN_EXPAND_ONLY_PREDEF "YES")
 set (DOXYGEN_PREDEFINED
-    "\"DDEMO_BEGIN_NAMESPACE=namespace Dtk { namespace Demo {\""
-    "\"DDEMO_END_NAMESPACE=}}\""
-    "\"DDEMO_USE_NAMESPACE=using namespace Dtk::Demo;\""
+    "DDEMO_BEGIN_NAMESPACE=namespace Dtk { namespace Demo {"
+    "DDEMO_END_NAMESPACE=}}"
+    "DDEMO_USE_NAMESPACE=using namespace Dtk::Demo;"
 )
 
 doxygen_add_docs (doxygen_demo
-    ${CMAKE_CURRENT_SOURCE_DIR}/../include
-    ${CMAKE_CURRENT_SOURCE_DIR}/../docs
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/docs
     ALL
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../
     COMMENT "Generate documentation via Doxygen"

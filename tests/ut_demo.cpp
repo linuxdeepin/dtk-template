@@ -1,26 +1,24 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 #include "mockdemo/mockdemo.h"
 #include "gtest/gtest.h"
 #include "3rdparty/cpp-stub/src/stub.h"
-#include "demo.h"
+#include "demo_p.h"
 
 DDEMO_USE_NAMESPACE
 
 class TestDemo : public testing::Test
 {
 public:
-    void SetUp() override
-    {
-        m_demo = new Demo;
-    }
+    void SetUp() override { m_demo = new Demo; }
     void TearDown() override
     {
         delete m_demo;
         m_demo = nullptr;
     }
+
 public:
     Demo *m_demo = nullptr;
 };
@@ -46,4 +44,3 @@ TEST_F(TestDemo, svg2png)
 
     EXPECT_TRUE(m_demo->svg2png("/no/exist/svg", "/tmp/test.png"));
 }
-

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
@@ -16,5 +16,5 @@ int main(int argc, char **argv)
 #ifdef QT_DEBUG
     __sanitizer_set_report_path("asan_demo.log");
 #endif
-    return ret; //app.exec();
+    return ret;  // app.exec();
 }

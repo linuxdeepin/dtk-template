@@ -1,37 +1,33 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 #include "ddemointerface.h"
 #include "ddbusinterface.h"
-#include "ddemotypes.h"
 
-#include <QDBusPendingReply>
-
-#ifdef USE_FAKE_INTERFACE
-static const QString &Service = QStringLiteral("org.freedesktop.fakelogin");
-static const QString &Path = QStringLiteral("/org/freedesktop/fakelogin");
-static const QString &Interface = QStringLiteral("org.freedesktop.fakelogin.Manager");
-#define DBUS_CON QDBusConnection::sessionBus()
-#else
-static const QString &Service = QStringLiteral("org.freedesktop.login1");
-static const QString &Path = QStringLiteral("/org/freedesktop/login1");
-static const QString &Interface = QStringLiteral("org.freedesktop.login1.Manager");
-#define DBUS_CON QDBusConnection::systemBus()
-#endif
+DDEMO_BEGIN_NAMESPACE
 
 DDemoInterface::DDemoInterface(QObject *parent)
     : QObject(parent)
-    , m_interface(new DDBusInterface(Service, Path, Interface, DBUS_CON, this))
 {
+#ifdef USE_FAKE_INTERFACE
+    const QString &Service = QStringLiteral("org.freedesktop.fakelogin");
+    const QString &Path = QStringLiteral("/org/freedesktop/fakelogin");
+    const QString &Interface = QStringLiteral("org.freedesktop.fakelogin.Manager");
+    auto Connection = QDBusConnection::sessionBus();
+#else
+    const QString &Service = QStringLiteral("org.freedesktop.login1");
+    const QString &Path = QStringLiteral("/org/freedesktop/login1");
+    const QString &Interface = QStringLiteral("org.freedesktop.login1.Manager");
+    auto Connection = QDBusConnection::systemBus();
+#endif
     // 自定义类型必须进行元对象类型注册才能正常使用。
-    UserPath::registerMetaType();
+    UserPath_p::registerMetaType();
 
     // 连接DBus 对象已存在的对象。
-    DBUS_CON.connect(Service, Path, Interface, "UserNew", this, SLOT(UserNew(const uint, const QDBusObjectPath &)));
+    Connection.connect(Service, Path, Interface, "UserNew", this, SLOT(UserNew(const uint, const QDBusObjectPath &)));
+    m_interface = new DDBusInterface(Service, Path, Interface, Connection, this);
 }
-
-DDemoInterface::~DDemoInterface() {}
 
 bool DDemoInterface::Docked() const
 {
@@ -40,15 +36,9 @@ bool DDemoInterface::Docked() const
 }
 
 // 此处演示了使用自定义类型的DBus方法，属性也是一样
-UserPathList DDemoInterface::ListUsers()
+QDBusPendingReply<UserPathList_p> DDemoInterface::ListUsers()
 {
-    QDBusPendingReply<UserPathList> reply = m_interface->asyncCall(QStringLiteral("ListUsers"));
-    reply.waitForFinished();
-    if (reply.isValid()) {
-        return reply.value();
-    } else {
-        m_errorMessage = reply.error().message();
-        Q_EMIT errorMessageChanged(m_errorMessage);
-    }
-    return UserPathList();
+    return m_interface->asyncCall(QStringLiteral("ListUsers"));
 }
+
+DDEMO_END_NAMESPACE

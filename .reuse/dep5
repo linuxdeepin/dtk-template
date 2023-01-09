@@ -1,7 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: dframework
-Upstream-Contact: guoyao <guoyao@uniontech.com>
-Source: https://github.com/Groveer/dframework
+Upstream-Name: dtk-template
+Source: https://github.com/linuxdeepin/dtk-template
 
 # Config files
 Files: .clang-format misc/*.in config.sh
@@ -14,9 +13,9 @@ Copyright: None
 License: CC0-1.0
 
 # docs
-Files: docs/*.md
-Copyright: None
-License: CC0-1.0
+Files: docs/*.md docs/*.dox
+Copyright: 2023 deepin doc doc go SIG
+License: CC-BY-4.0
 
 # debian
 Files: debian/*

@@ -1,23 +1,60 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 #include <librsvg/rsvg.h>
 
-#include "demo.h"
-
+#include "demo_p.h"
 #include <QtGui/QImage>
 #include <QtGui/QPainter>
 #include <QDebug>
 
 DDEMO_BEGIN_NAMESPACE
-Demo::Demo(QObject *parent) : QObject(parent) {}
 
-Demo::~Demo() {}
+using DCORE_NAMESPACE::DUnexpected;
+using DCORE_NAMESPACE::emplace_tag;
 
-int Demo::add(const int a, const int b) { return a + b; }
+DemoPrivate::DemoPrivate(Demo *parent)
+    : q_ptr(parent)
+    , m_inter(new DDemoInterface(this))
+{
+}
 
-bool Demo::svg2png(const QString &svgfile, const QString &pngfile,  QSize size)
+Demo::Demo(QObject *parent)
+    : QObject(parent)
+    , d_ptr(new DemoPrivate(this))
+{
+    Q_D(const Demo);
+    connect(d->m_inter, &DDemoInterface::DockedChanged, this, &Demo::DockedChanged);
+}
+
+Demo::~Demo() = default;
+
+bool Demo::docked()
+{
+    Q_D(const Demo);
+    return d->m_inter->Docked();
+}
+
+DExpected<UserPathList> Demo::listUsers()
+{
+    Q_D(const Demo);
+    auto reply = d->m_inter->ListUsers();
+    reply.waitForFinished();
+    if (!reply.isValid())
+        return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};
+    UserPathList ret;
+    for (const auto &i : reply.value())
+        ret.append(i);
+    return ret;
+}
+
+int Demo::add(const int a, const int b)
+{
+    return a + b;
+}
+
+bool Demo::svg2png(const QString &svgfile, const QString &pngfile, QSize size)
 {
     QImage outPutimage(size, QImage::Format_ARGB32);
     outPutimage.fill(Qt::transparent);
@@ -41,8 +78,7 @@ bool Demo::svg2png(const QString &svgfile, const QString &pngfile,  QSize size)
         QRectF viewBox(QPointF(0, 0), defaultSize);
 
         cairo_surface_t *surface = cairo_image_surface_create_for_data(
-                    outPutimage.bits(), CAIRO_FORMAT_ARGB32,
-                    outPutimage.width(), outPutimage.height(), outPutimage.bytesPerLine());
+            outPutimage.bits(), CAIRO_FORMAT_ARGB32, outPutimage.width(), outPutimage.height(), outPutimage.bytesPerLine());
         cairo_t *cairo = cairo_create(surface);
         cairo_scale(cairo, outPutimage.width() / viewBox.width(), outPutimage.height() / viewBox.height());
         cairo_translate(cairo, -viewBox.x(), -viewBox.y());
